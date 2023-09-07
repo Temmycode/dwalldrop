@@ -10,28 +10,53 @@ class HomePage extends ConsumerWidget {
   const HomePage({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final controller = ref.watch(pageController);
     final int currentIndex = ref.watch(homePageIndexController);
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      body: pages[currentIndex],
+      body: PageView(
+        physics: const NeverScrollableScrollPhysics(),
+        key: key,
+        controller: controller,
+        children: pages,
+      ),
+      //  pages[currentIndex],
       bottomNavigationBar: NavigationBar(
-        backgroundColor: AppColors.backgroundColor.withOpacity(0.5),
+        backgroundColor: AppColors.backgroundColor,
         elevation: 0,
         indicatorColor: AppColors.navIndicatorColor,
         height: 98.h(context),
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-        onDestinationSelected: (value) =>
-            ref.read(homePageIndexController.notifier).state = value,
+        onDestinationSelected: (value) {
+          ref.read(homePageIndexController.notifier).state = value;
+          ref.read(pageController).animateToPage(
+                value,
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeInOut,
+              );
+        },
         selectedIndex: currentIndex,
-        destinations: const [
+        destinations: [
           NavigationDestination(
-            selectedIcon: Icon(CupertinoIcons.compass_fill),
-            icon: Icon(CupertinoIcons.compass),
+            selectedIcon: Icon(
+              CupertinoIcons.compass_fill,
+              color: AppColors.yellowColor,
+            ),
+            icon: Icon(
+              CupertinoIcons.compass,
+              color: Colors.grey.shade400.withOpacity(0.5),
+            ),
             label: "Explore",
           ),
           NavigationDestination(
-            selectedIcon: Icon(CupertinoIcons.heart_fill),
-            icon: Icon(CupertinoIcons.heart),
+            selectedIcon: Icon(
+              CupertinoIcons.heart_fill,
+              color: AppColors.yellowColor,
+            ),
+            icon: Icon(
+              CupertinoIcons.heart,
+              color: Colors.grey.shade400.withOpacity(0.5),
+            ),
             label: "Favourite",
           ),
         ],
@@ -39,3 +64,8 @@ class HomePage extends ConsumerWidget {
     );
   }
 }
+
+final pageController = Provider<PageController>((ref) {
+  final controller = PageController();
+  return controller;
+});

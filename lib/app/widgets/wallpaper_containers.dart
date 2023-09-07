@@ -32,7 +32,7 @@ class WallpaperContainers extends ConsumerWidget {
           BoxShadow(
             offset: const Offset(0, 4),
             blurRadius: 10,
-            color: Colors.black.withOpacity(0.25),
+            color: Colors.black.withOpacity(0.15),
           )
         ],
       ),
@@ -66,7 +66,7 @@ class WallpaperContainers extends ConsumerWidget {
                     20.h(context),
                   ),
                 ),
-                color: Colors.black12,
+                color: Colors.black26,
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,7 +87,7 @@ class WallpaperContainers extends ConsumerWidget {
                       size: 23.3.h(context),
                       color: Colors.white,
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
