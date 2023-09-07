@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dwalldrop/app/extensions/dimensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,9 +17,10 @@ class OnDisplayWallpaperContainer extends ConsumerWidget {
       width: 313.w(context),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20.h(context)),
-        child: Image.network(
-          image,
+        child: CachedNetworkImage(
+          imageUrl: image,
           fit: BoxFit.cover,
+          errorWidget: (context, url, error) => const Icon(Icons.error),
           height: 193.h(context),
           width: 313.w(context),
         ),

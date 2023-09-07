@@ -8,4 +8,5 @@ class AppImages {
   // icons
   static const String search = '$iconSrc/search.png';
   static const String user = '$iconSrc/user.png';
+  static const String close = '$iconSrc/close.png';
 }
