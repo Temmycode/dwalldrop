@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "390867138880",
+    "project_id": "wallpapers-40651",
+    "storage_bucket": "wallpapers-40651.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:390867138880:android:56fdae24c434041d6722a5",
+        "android_client_info": {
+          "package_name": "com.example.dwalldrop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "390867138880-bbiq9k79vnc8ro1a7qd8fcolkmpdpj41.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYoa_iJocS6BxuxuIExNAVc1jBvdG2ZXQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "390867138880-bbiq9k79vnc8ro1a7qd8fcolkmpdpj41.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

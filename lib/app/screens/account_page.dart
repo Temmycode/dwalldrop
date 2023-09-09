@@ -1,12 +1,12 @@
 import 'package:dwalldrop/app/constants/account_page_constants.dart';
 import 'package:dwalldrop/app/extensions/dimensions.dart';
-import 'package:dwalldrop/app/widgets/account_page_list_tile.dart';
-import 'package:dwalldrop/app/widgets/login_container.dart';
 import 'package:dwalldrop/setup/colors/app_colors.dart';
 import 'package:dwalldrop/setup/images/image.dart';
 import 'package:dwalldrop/setup/text/title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../authentication/screens/account_page_list_tile.dart';
+import '../../authentication/screens/login_container.dart';
 
 class AccountPage extends ConsumerWidget {
   const AccountPage({super.key});
@@ -47,6 +47,7 @@ class AccountPage extends ConsumerWidget {
             const LoginContainer(),
             SizedBox(height: 17.h(context)),
             ListView(
+              padding: EdgeInsets.symmetric(horizontal: 13.h(context)),
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               children: accountPageConstants
