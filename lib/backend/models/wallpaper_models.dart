@@ -6,7 +6,7 @@ class WallpaperModel {
   final String wallpaperName;
   final String creatorName;
   final String imageUrl;
-  final bool likedBy;
+  final List likedBy;
 
   const WallpaperModel({
     required this.wallpaperName,
@@ -15,7 +15,7 @@ class WallpaperModel {
     required this.likedBy,
   });
 
-  Map<String, dynamic> toJson(Map<String, dynamic> json) => {
+  Map<String, dynamic> toJson() => {
         'wallpaperName': wallpaperName,
         'creatorName': creatorName,
         'imageUrl': imageUrl,

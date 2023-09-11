@@ -3,7 +3,14 @@ import 'package:dwalldrop/authentication/provider/auth_state_provider.dart';
 import 'package:dwalldrop/backend/services/shared_prefernce_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final isLoggedInProvider = FutureProvider<bool>((ref) async {
-  final loginState = await SharedPrefrenceService.getIsLoggedIn();
-  return loginState;
+final isLoggedInProvider = Provider<bool>((ref) {
+  final authState = ref.watch(authStateProvider);
+  if (authState.isLoggedIn &&
+      !authState.isLoading &&
+      authState.result == AuthResult.success &&
+      authState.userId != null) {
+    return true;
+  } else {
+    return false;
+  }
 });

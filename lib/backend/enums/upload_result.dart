@@ -1,0 +1,1 @@
+enum UploadResult { success, failure }

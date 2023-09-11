@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:dwalldrop/authentication/enums/auth_result.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -35,16 +36,23 @@ class AuthClient {
       return AuthResult.success;
     } catch (e) {
       error = e.toString();
+      log(e.toString());
       return AuthResult.failure;
     }
   }
 
   Future<AuthResult> signout() async {
     try {
+      final GoogleSignInAccount? googleSignInAccount =
+          GoogleSignIn().currentUser;
+      if (googleSignInAccount != null) {
+        await GoogleSignIn().signOut();
+      }
       await FirebaseAuth.instance.signOut();
       return AuthResult.success;
     } catch (e) {
       error = e.toString();
+      log(e.toString());
       return AuthResult.failure;
     }
   }

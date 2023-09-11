@@ -24,6 +24,8 @@ dependencies:
   cloud_firestore: ^4.9.1
   google_sign_in: ^6.1.5
   shared_preferences: ^2.2.1
+  image_picker: ^1.0.4
+  uuid: ^4.0.0
 
 dev_dependencies:
   flutter_test:

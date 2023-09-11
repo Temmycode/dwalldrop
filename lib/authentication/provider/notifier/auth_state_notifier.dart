@@ -1,4 +1,5 @@
 import 'package:dwalldrop/authentication/logic/auth_client.dart';
+import 'package:dwalldrop/authentication/logic/user_upload_client.dart';
 import 'package:dwalldrop/authentication/models/auth_state.dart';
 import 'package:dwalldrop/backend/services/shared_prefernce_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,22 +12,12 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
     // USING SHARED PREFERENCE INSTANCE OF THE LOGIN TO LOGIN THE USER AT FIRST INSTANCE
     sharedPreferenceLogInState.then((loggedIn) {
       state = AuthState(
-        userId: auth.userId!,
+        userId: auth.userId,
         isLoading: false,
         isLoggedIn: loggedIn,
         result: AuthResult.success,
       );
     });
-
-    // I COMMENTED THIS OUT TO CHECK THE POSSIBILITY OF THAT CODE ABOVE WORKING
-    // if (auth.isLoggedIn) {
-    //   state = AuthState(
-    //     userId: auth.userId!,
-    //     isLoading: false,
-    //     isLoggedIn: true,
-    //     result: AuthResult.success,
-    //   );
-    // }
   }
 
   // LOG IN WITH GOOGLE FUNCTION
@@ -46,11 +37,17 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
         isLoading: false,
         isLoggedIn: true,
       );
+      // UPLOAD THE USE TO THE FIRESTORE DATABASE
+      await UseruploadClient.uploadUserToDatabase(
+        auth.userId!,
+        auth.email!,
+        auth.username!,
+      );
     } else {
       // SET THE LOGIN TO FALSE
       await SharedPrefrenceService.setIsLoggedIn(isLoggedIn: false);
       state = AuthState(
-        userId: null,
+        userId: auth.userId,
         result: result,
         isLoading: false,
         isLoggedIn: false,
@@ -61,17 +58,17 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
   Future<void> signout() async {
     state = state.copyIsLoading(isLoading: true);
     final result = await auth.signout();
-    if (auth.userId == null &&
-        auth.isLoggedIn == false &&
-        result == AuthResult.success) {
+
+    state = AuthState(
+      userId: null,
+      result: result,
+      isLoading: false,
+      isLoggedIn: false,
+    );
+    if (result == AuthResult.success) {
       // CLEAR THE SHARED PREFERENCE
+
       await SharedPrefrenceService.clearCacheInstance();
-      state = AuthState(
-        userId: null,
-        result: result,
-        isLoading: false,
-        isLoggedIn: false,
-      );
     }
   }
 }
