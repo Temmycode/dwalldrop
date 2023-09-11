@@ -35,11 +35,11 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
     final result = await auth.signInWithGoogle();
     if (auth.userId != null && auth.isLoggedIn == true) {
       // CACHE THE USERNAME
-      SharedPrefrenceService.cacheUsername(username: auth.username!);
+      await SharedPrefrenceService.cacheUsername(username: auth.username!);
       // CACHE THE EMAIL
-      SharedPrefrenceService.cacheUserEmail(email: auth.email!);
+      await SharedPrefrenceService.cacheUserEmail(email: auth.email!);
       // LOG IN USER WITH SHARED PREFERENCE
-      SharedPrefrenceService.setIsLoggedIn(isLoggedIn: true);
+      await SharedPrefrenceService.setIsLoggedIn(isLoggedIn: true);
       state = AuthState(
         userId: auth.userId!,
         result: result,
@@ -48,7 +48,24 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
       );
     } else {
       // SET THE LOGIN TO FALSE
-      SharedPrefrenceService.setIsLoggedIn(isLoggedIn: false);
+      await SharedPrefrenceService.setIsLoggedIn(isLoggedIn: false);
+      state = AuthState(
+        userId: null,
+        result: result,
+        isLoading: false,
+        isLoggedIn: false,
+      );
+    }
+  }
+
+  Future<void> signout() async {
+    state = state.copyIsLoading(isLoading: true);
+    final result = await auth.signout();
+    if (auth.userId == null &&
+        auth.isLoggedIn == false &&
+        result == AuthResult.success) {
+      // CLEAR THE SHARED PREFERENCE
+      await SharedPrefrenceService.clearCacheInstance();
       state = AuthState(
         userId: null,
         result: result,

@@ -29,13 +29,6 @@ class AuthState {
         isLoggedIn: isLoggedIn,
       );
 
-  AuthState copyIsLoggedIn({required bool isLoggedIn}) => AuthState(
-        userId: userId,
-        result: result,
-        isLoading: isLoading,
-        isLoggedIn: isLoggedIn,
-      );
-
   @override
   bool operator ==(covariant AuthState other) => (userId == other.userId &&
       result == other.result &&

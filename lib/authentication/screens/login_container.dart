@@ -58,9 +58,12 @@ class LoginContainer extends ConsumerWidget {
           // THIS IS YOUR NAME IF SIGNED IN
           TitleText(
             text: isLoggedIn.when(
-              data: (login) => login
-                  ? "Signed in things naa"
-                  : "Save & Sync Your Favourites",
+              data: (login) {
+                print(login);
+                return login
+                    ? "Signed in things naa"
+                    : "Save & Sync Your Favourites";
+              },
               error: (error, stk) => '',
               loading: () => '',
             ),
@@ -85,12 +88,26 @@ class LoginContainer extends ConsumerWidget {
           // AND THE SIGNOUT CONGTAINER IF SIGNED IN
           InkWell(
             borderRadius: BorderRadius.circular(40.h(context)),
-            onTap: () async {
-              // TODO
-              // FUNCTION TO LOGIN THE USER OR LOGOUT THE USER IF LOGGED IN
-              await ref.read(authStateProvider.notifier).signInWithGoogle();
-              print(auth.userId);
-            },
+            onTap: isLoggedIn.when(
+              data: (login) {
+                if (login) {
+                  return () async {
+                    // FUNCTION TO LOGIN THE USER OR LOGOUT THE USER IF LOGGED IN
+                    await ref
+                        .read(authStateProvider.notifier)
+                        .signInWithGoogle();
+                    print(auth.userId);
+                  };
+                } else {
+                  return () async {
+                    // FUNCTION TO LOG OUT THE USER
+                    await ref.read(authStateProvider.notifier).signout();
+                  };
+                }
+              },
+              error: (error, stk) => () {},
+              loading: () => () {},
+            ),
             child: Ink(
               height: 57.h(context),
               width: 317.w(context),

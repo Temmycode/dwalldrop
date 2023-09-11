@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthClient {
+  static String error = '';
   // IS LOGGED IN FUNCTION
   bool get isLoggedIn => userId != null ? true : false;
   // THE USER EMAIL
@@ -33,6 +34,17 @@ class AuthClient {
       await FirebaseAuth.instance.signInWithCredential(credential);
       return AuthResult.success;
     } catch (e) {
+      error = e.toString();
+      return AuthResult.failure;
+    }
+  }
+
+  Future<AuthResult> signout() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      return AuthResult.success;
+    } catch (e) {
+      error = e.toString();
       return AuthResult.failure;
     }
   }

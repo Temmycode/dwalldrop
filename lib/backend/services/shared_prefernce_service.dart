@@ -34,4 +34,9 @@ final class SharedPrefrenceService {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool('isloggedin') ?? false;
   }
+
+  static Future<bool> clearCacheInstance() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.clear();
+  }
 }

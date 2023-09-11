@@ -1,0 +1,1 @@
+enum LikeResult { success, failure }

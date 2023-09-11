@@ -24,7 +24,7 @@ class WallpaperContainers extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       margin: EdgeInsets.only(bottom: 12.h(context)),
-      height: index.isOdd ? 220.h(context) : 249.612.h(context),
+      height: index.isOdd ? 230.h(context) : 269.612.h(context),
       width: 175.w(context),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.h(context)),
@@ -41,7 +41,7 @@ class WallpaperContainers extends ConsumerWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(20.h(context)),
             child: CachedNetworkImage(
-              height: index.isOdd ? 220.h(context) : 249.612.h(context),
+              height: index.isOdd ? 230.h(context) : 269.612.h(context),
               width: 177.5.w(context),
               imageUrl: image,
               fit: BoxFit.cover,
@@ -49,6 +49,8 @@ class WallpaperContainers extends ConsumerWidget {
                 Icons.error,
                 color: Colors.white,
               ),
+              progressIndicatorBuilder: (context, url, progress) =>
+                  const Center(child: CircularProgressIndicator.adaptive()),
             ),
           ),
           Align(

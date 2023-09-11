@@ -7,7 +7,7 @@ final onDisplayWallpaperPageProvider = Provider((ref) {
   // i am using the mock data for now
   final initalPage = ondisplayWallpaperMock.length ~/ 2;
   final controller = PageController(
-    viewportFraction: 0.86,
+    viewportFraction: 0.89,
     initialPage: initalPage,
   );
   return controller;
