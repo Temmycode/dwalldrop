@@ -18,4 +18,5 @@ class AppImages {
 
   // images
   static const String google = '$imgSrc/google.png';
+  static const String kylo = '$imgSrc/kylo.jpg';
 }

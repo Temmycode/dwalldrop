@@ -9,4 +9,5 @@ class AppColors {
   static final Color yellowColor = '#FFC22C'.toColor();
   static final Color blueColor = '#17B8CC'.toColor();
   static final Color loginColor = '#222D33'.toColor();
+  static final Color lightGrey = '252F38'.toColor();
 }

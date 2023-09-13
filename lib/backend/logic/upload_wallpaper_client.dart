@@ -19,7 +19,8 @@ class UploadWallpaperClient {
       final storageRef = FirebaseStorage.instance
           .ref()
           .child(FirestoreConstants.wallpaperCollection)
-          .child(userId);
+          .child(userId)
+          .child(wallpaperName);
       await storageRef.putFile(wallpaperFile);
       final wallpaperUrl = await storageRef.getDownloadURL();
 
