@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 import 'package:dwalldrop/app/extensions/dimensions.dart';
 import 'package:dwalldrop/app/extensions/xfile_to_file_extension.dart';

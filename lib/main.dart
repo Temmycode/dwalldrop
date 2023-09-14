@@ -1,3 +1,4 @@
+import 'package:dwalldrop/app/providers/controllers/loading/loading_screen.dart';
 import 'package:dwalldrop/app/widgets/app_snack_bar.dart';
 import 'package:dwalldrop/authentication/provider/auth_errors_provider.dart';
 import 'package:dwalldrop/authentication/provider/is_loading_provider.dart';
@@ -42,16 +43,23 @@ class DWallDrop extends ConsumerWidget {
         useMaterial3: true,
       ),
       home: Consumer(
-        builder: (context, ref, child) {
+        builder: (_, ref, child) {
           // SNACK BAR TO DISPLAY THE ERROR IN THE APPLICATION
           ref.listen(authErrorProvider, (previous, error) {
-            appSnackBar(context, error);
-            ScaffoldMessenger.of(context).clearSnackBars();
+            if (error.isNotEmpty) {
+              appSnackBar(context, error);
+            } else {
+              ScaffoldMessenger.of(context).clearSnackBars();
+            }
           });
 
-          // SHOW THE SNACKBAR FOR LOADING
-          ref.listen(isLoadingProvider, (previous, loading) {
-            const CircularProgressIndicator.adaptive();
+          // SHOW LOADING WIDGET IF THERE IS A LOAD IN THE SYSTEM
+          ref.listen<bool>(isLoadingProvider, (previous, loading) {
+            if (loading) {
+              LoadingScreen.instance().show(context: context);
+            } else {
+              LoadingScreen.instance().hide();
+            }
           });
           return const HomePage();
         },
