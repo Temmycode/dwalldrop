@@ -10,8 +10,8 @@ import 'package:uuid/uuid.dart';
 class UploadWallpaperClient {
   static String error = '';
   static final authInstance = FirebaseAuth.instance;
-  String username = authInstance.currentUser!.displayName!;
-  String userId = authInstance.currentUser!.uid;
+  String? username = authInstance.currentUser?.displayName!;
+  String? userId = authInstance.currentUser?.uid;
   Future<UploadResult> uploadWallpaper(File wallpaperFile, String userId,
       String wallpaperName, String username) async {
     try {

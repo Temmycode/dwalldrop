@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:dwalldrop/app/extensions/dimensions.dart';
 import 'package:dwalldrop/app/extensions/xfile_to_file_extension.dart';
@@ -5,6 +6,7 @@ import 'package:dwalldrop/app/helpers/image_picker_helper.dart';
 import 'package:dwalldrop/app/widgets/app_snack_bar.dart';
 import 'package:dwalldrop/authentication/provider/is_logged_in_provider.dart';
 import 'package:dwalldrop/backend/enums/upload_result.dart';
+import 'package:dwalldrop/backend/models/upload_state.dart';
 import 'package:dwalldrop/backend/state/providers/upload_wallpaper_provider.dart';
 import 'package:dwalldrop/setup/colors/app_colors.dart';
 import 'package:dwalldrop/setup/images/image.dart';
@@ -101,7 +103,6 @@ class _UploadWallpaperPageState extends ConsumerState<UploadWallpaperPage> {
         ),
       ),
       body: SingleChildScrollView(
-        // physics: const NeverScrollableScrollPhysics(),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w(context)),
           child: Column(

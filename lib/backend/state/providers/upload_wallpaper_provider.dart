@@ -4,5 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final uploadWallpaperProvider =
     StateNotifierProvider<UploadWallpaperNotifier, UploadState>(
-  (_) => UploadWallpaperNotifier(),
+  (ref) => UploadWallpaperNotifier(
+    ref: ref,
+  ),
 );

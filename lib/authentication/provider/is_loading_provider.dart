@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final isLoadingProvider = Provider<bool>((ref) {
   final auth = ref.watch(authStateProvider);
-  final upload = ref.watch(uploadWallpaperProvider);
-  if (auth.isLoading || upload.isLoading) {
+  // final upload = ref.watch(uploadWallpaperProvider);
+  if (auth.isLoading) {
     return true;
   } else {
     return false;

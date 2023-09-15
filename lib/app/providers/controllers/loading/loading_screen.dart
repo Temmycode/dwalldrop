@@ -38,7 +38,7 @@ class LoadingScreen {
     required BuildContext context,
     required String text,
   }) {
-    final state = Overlay.of(context);
+    final OverlayState state = Overlay.of(context);
     if (state == null) {
       return null;
     }
