@@ -1,6 +1,5 @@
 import 'package:dwalldrop/app/providers/controllers/loading/loading_screen.dart';
 import 'package:dwalldrop/app/screens/home_page.dart';
-import 'package:dwalldrop/app/screens/upload_wallpaper_page.dart';
 import 'package:dwalldrop/app/widgets/app_snack_bar.dart';
 import 'package:dwalldrop/authentication/provider/auth_errors_provider.dart';
 import 'package:dwalldrop/authentication/provider/is_loading_provider.dart';
