@@ -2,6 +2,7 @@ import 'package:dwalldrop/app/extensions/dimensions.dart';
 import 'package:dwalldrop/app/providers/is_upload_hidden_provider.dart';
 import 'package:dwalldrop/app/screens/account_page.dart';
 import 'package:dwalldrop/app/screens/upload_wallpaper_page.dart';
+import 'package:dwalldrop/app/screens/wallpaper_page.dart';
 import 'package:dwalldrop/app/widgets/ondisplay_wallpaper_containers.dart';
 import 'package:dwalldrop/app/widgets/wallpaper_containers.dart';
 import 'package:dwalldrop/mock/ondisplay_wallpaper_mock.dart';
@@ -192,12 +193,32 @@ class _ExplorePageState extends ConsumerState<ExplorePage>
                         crossAxisSpacing: 13,
                         itemBuilder: (context, index) {
                           final wallpapers = wallpaperMockData[index];
-                          return WallpaperContainers(
-                            index: index,
-                            image: wallpapers[0],
-                            wallpaperName: wallpapers[1],
-                            creator: wallpapers[2],
-                            liked: wallpapers[3],
+                          return GestureDetector(
+                            onTap: () {
+                              // NAVIGATE TO THE WALLPAPER SETTING PAGE
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => WallpaperPage(
+                                    wallpaper: wallpapers[0],
+                                    userAvatar:
+                                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtEbTLfMii3TQW5ambR0PD6FlRMPcUFzDy_g&usqp=CAU',
+                                    wallpaperName: wallpapers[1],
+                                    username: wallpapers[2],
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Hero(
+                              tag: wallpapers[1],
+                              child: WallpaperContainers(
+                                index: index,
+                                image: wallpapers[0],
+                                wallpaperName: wallpapers[1],
+                                creator: wallpapers[2],
+                                liked: wallpapers[3],
+                              ),
+                            ),
                           );
                         },
                         itemCount: 10,
@@ -235,7 +256,7 @@ class _ExplorePageState extends ConsumerState<ExplorePage>
                         color: AppColors.yellowColor,
                       ),
                       child: const Icon(
-                        CupertinoIcons.square_arrow_up,
+                        CupertinoIcons.add,
                         color: Colors.black,
                       ),
                     ),

@@ -50,11 +50,15 @@ class _UploadWallpaperPageState extends ConsumerState<UploadWallpaperPage> {
     }
   }
 
-  Future<void> uploadFunction({required File? wallpaperFile}) async {
+  Future<void> uploadFunction({
+    required File? wallpaperFile,
+    required String imageDimensions,
+  }) async {
     if (_wallpaperNameController.text.isNotEmpty && wallpaperFile != null) {
       await ref.read(uploadWallpaperProvider.notifier).uploadWallpaper(
             wallpaperFile: wallpaperFile,
             wallpaperName: _wallpaperNameController.text,
+            imageDimensions: '',
           );
     } else {
       appSnackBar(context, "Fill the necessary things");
@@ -235,7 +239,11 @@ class _UploadWallpaperPageState extends ConsumerState<UploadWallpaperPage> {
                     InkWell(
                       borderRadius: BorderRadius.circular(40.h(context)),
                       onTap: () async {
-                        await uploadFunction(wallpaperFile: wallpaperFile);
+                        // TODO : CALCULATE THE IMAGE DIMENSIONS AND THE WALLPAPERSIZE
+                        await uploadFunction(
+                          wallpaperFile: wallpaperFile,
+                          imageDimensions: '',
+                        );
                         // exit this screen if the upload was successful
                         if (uploadComplete.result == UploadResult.success) {
                           // ignore: use_build_context_synchronously

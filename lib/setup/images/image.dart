@@ -15,6 +15,13 @@ class AppImages {
   static const String uploadIcon = '$iconSrc/upload.png';
   static const String starIcon = '$iconSrc/star.png';
   static const String cacheIcon = '$iconSrc/cache.png';
+  static const String downloadCircleIcon = '$iconSrc/download_circle.png';
+  static const String downloadIcon = '$iconSrc/download.png';
+  static const String folderOpenIcon = '$iconSrc/folder_open.png';
+  static const String folderIcon = '$iconSrc/folder.png';
+  static const String cautionIcon = '$iconSrc/caution.png';
+  static const String shapesIcon = '$iconSrc/shapes.png';
+  static const String verificationIcon = '$iconSrc/verified.png';
 
   // images
   static const String google = '$imgSrc/google.png';

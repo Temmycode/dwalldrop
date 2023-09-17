@@ -14,6 +14,7 @@ class UploadWallpaperNotifier extends StateNotifier<UploadState> {
   Future<void> uploadWallpaper({
     required File wallpaperFile,
     required String wallpaperName,
+    required String imageDimensions,
   }) async {
     final isLoggedIn = ref.watch(isLoggedInProvider);
     state = state.copyIsLoading(isLoading: true);
@@ -23,6 +24,7 @@ class UploadWallpaperNotifier extends StateNotifier<UploadState> {
         _uploadClient.userId!,
         wallpaperName,
         _uploadClient.username!,
+        imageDimensions,
       );
       state = UploadState(result: result, isLoading: false);
     } else {
