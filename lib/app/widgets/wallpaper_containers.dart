@@ -12,6 +12,7 @@ class WallpaperContainers extends ConsumerWidget {
   final String wallpaperName;
   final String creator;
   final bool liked;
+
   const WallpaperContainers({
     super.key,
     required this.index,
@@ -38,19 +39,20 @@ class WallpaperContainers extends ConsumerWidget {
       ),
       child: Stack(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(20.h(context)),
-            child: CachedNetworkImage(
-              height: index.isOdd ? 230.h(context) : 269.612.h(context),
-              width: 177.5.w(context),
-              imageUrl: image,
-              fit: BoxFit.cover,
-              errorWidget: (context, url, error) => const Icon(
-                Icons.error,
-                color: Colors.white,
+          Hero(
+            tag: wallpaperName,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20.h(context)),
+              child: CachedNetworkImage(
+                height: index.isOdd ? 230.h(context) : 269.612.h(context),
+                width: 177.5.w(context),
+                imageUrl: image,
+                fit: BoxFit.cover,
+                errorWidget: (context, url, error) => const Icon(
+                  Icons.error,
+                  color: Colors.white,
+                ),
               ),
-              progressIndicatorBuilder: (context, url, progress) =>
-                  const Center(child: CircularProgressIndicator.adaptive()),
             ),
           ),
           Align(

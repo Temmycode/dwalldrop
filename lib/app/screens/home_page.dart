@@ -3,6 +3,7 @@ import 'package:dwalldrop/app/providers/controllers/page_index_controller.dart';
 import 'package:dwalldrop/setup/colors/app_colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomePage extends ConsumerWidget {
@@ -29,7 +30,7 @@ class HomePage extends ConsumerWidget {
           ref.read(homePageIndexController.notifier).state = value;
           ref.read(pageController).animateToPage(
                 value,
-                duration: const Duration(milliseconds: 200),
+                duration: 150.ms,
                 curve: Curves.easeInOut,
               );
         },

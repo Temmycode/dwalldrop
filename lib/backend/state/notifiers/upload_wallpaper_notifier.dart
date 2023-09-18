@@ -25,6 +25,7 @@ class UploadWallpaperNotifier extends StateNotifier<UploadState> {
         wallpaperName,
         _uploadClient.username!,
         imageDimensions,
+        _uploadClient.userAvatar!,
       );
       state = UploadState(result: result, isLoading: false);
     } else {

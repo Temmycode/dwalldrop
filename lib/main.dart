@@ -43,7 +43,7 @@ class DWallDrop extends ConsumerWidget {
         useMaterial3: true,
       ),
       home: Consumer(
-        builder: (_, ref, child) {
+        builder: (ctx, ref, child) {
           // SNACK BAR TO DISPLAY THE ERROR IN THE APPLICATION
           ref.listen(authErrorProvider, (previous, error) {
             if (error.isNotEmpty) {
@@ -56,7 +56,7 @@ class DWallDrop extends ConsumerWidget {
           // SHOW LOADING WIDGET IF THERE IS A LOAD IN THE SYSTEM
           ref.listen<bool>(isLoadingProvider, (previous, loading) {
             if (loading) {
-              LoadingScreen.instance().show(context: context);
+              LoadingScreen.instance().show(context: ctx);
             } else {
               LoadingScreen.instance().hide();
             }

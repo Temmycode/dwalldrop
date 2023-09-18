@@ -7,8 +7,8 @@ class WallpaperModel {
   final String wallpaperName;
   final String creatorName;
   final String imageUrl;
+  final String userAvatar;
   final int wallpaperSize;
-  final String imageDimensions;
   final int noDownloaded;
   final List likedBy;
 
@@ -19,8 +19,8 @@ class WallpaperModel {
     required this.imageUrl,
     required this.likedBy,
     required this.wallpaperSize,
-    required this.imageDimensions,
     required this.noDownloaded,
+    required this.userAvatar,
   });
 
   Map<String, dynamic> toJson() => {
@@ -30,8 +30,8 @@ class WallpaperModel {
         'imageUrl': imageUrl,
         'likedBy': likedBy,
         'wallpaperSize': wallpaperSize,
-        'imageDimensions': imageDimensions,
         'noDownloaded': noDownloaded,
+        'userAvatar': userAvatar,
       };
 
   factory WallpaperModel.fromJson(DocumentSnapshot snapshot) {
@@ -43,8 +43,8 @@ class WallpaperModel {
       imageUrl: snap['imageUrl'],
       likedBy: snap['likedBy'],
       wallpaperSize: snap['wallpaperSize'],
-      imageDimensions: snap['imageDimensions'],
       noDownloaded: snap['noDownloaded'],
+      userAvatar: snap['userAvatar'],
     );
   }
 
@@ -55,7 +55,7 @@ class WallpaperModel {
           creatorName == other.creatorName &&
           imageUrl == other.imageUrl &&
           wallpaperSize == other.wallpaperSize &&
-          imageDimensions == other.imageDimensions);
+          userAvatar == other.userAvatar);
 
   @override
   int get hashCode => Object.hashAll(
@@ -65,11 +65,13 @@ class WallpaperModel {
           creatorName,
           imageUrl,
           wallpaperSize,
-          imageDimensions,
+          userAvatar,
         ],
       );
 
   @override
   String toString() =>
-      'WallpaperModel(wallpaperId: $wallpaperId, wallpaperName: $wallpaperName, creatorName: $creatorName, imageUrl: $imageUrl, likedBy: $likedBy, wallpaperSize: $wallpaperSize, imageDimensions: $imageDimensions, noDownloaded: $noDownloaded)';
+      '''WallpaperModel(wallpaperId: $wallpaperId, wallpaperName: $wallpaperName,
+       creatorName: $creatorName, imageUrl: $imageUrl, likedBy: $likedBy,
+        wallpaperSize: $wallpaperSize, noDownloaded: $noDownloaded, userAvatar: $userAvatar)''';
 }

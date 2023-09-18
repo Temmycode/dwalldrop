@@ -12,12 +12,14 @@ class UploadWallpaperClient {
   static final authInstance = FirebaseAuth.instance;
   String? username = authInstance.currentUser?.displayName!;
   String? userId = authInstance.currentUser?.uid;
+  String? userAvatar = authInstance.currentUser?.photoURL;
   Future<UploadResult> uploadWallpaper(
     File wallpaperFile,
     String userId,
     String wallpaperName,
     String username,
     String imageDimensions,
+    String userAvatar,
   ) async {
     try {
       // upload the file to firebase storage first of all
@@ -37,10 +39,10 @@ class UploadWallpaperClient {
         creatorName: username,
         imageUrl: wallpaperUrl,
         likedBy: const [],
-        imageDimensions: imageDimensions,
         noDownloaded: 0,
         wallpaperSize: wallpaperSize!,
         wallpaperId: wallpaperId,
+        userAvatar: userAvatar,
       );
       await FirebaseFirestore.instance
           .collection(FirestoreConstants.wallpaperCollection)

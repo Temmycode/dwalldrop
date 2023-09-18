@@ -38,66 +38,64 @@ class LoadingScreen {
     required BuildContext context,
     required String text,
   }) {
-    final OverlayState state = Overlay.of(context);
-    if (state == null) {
-      return null;
-    }
-
+    final state = Overlay.of(context);
     final textController = StreamController<String>();
     textController.add(text);
 
     final renderBox = context.findRenderObject() as RenderBox;
     final size = renderBox.size;
 
-    final overlay = OverlayEntry(builder: (context) {
-      return Material(
-        color: Colors.black.withAlpha(150),
-        child: Center(
-          child: Container(
-            constraints: BoxConstraints(
-              maxHeight: size.height * 0.8,
-              maxWidth: size.width * 0.8,
-              minWidth: size.width * 0.5,
-            ),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20.h(context)),
-              color: Colors.white,
-            ),
-            child: Padding(
-              padding: EdgeInsets.all(16.h(context)),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(height: 10.h(context)),
-                    const CircularProgressIndicator(),
-                    SizedBox(height: 10.h(context)),
-                    StreamBuilder(
-                      stream: textController.stream,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return Text(
-                            snapshot.requireData,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(
-                                  color: Colors.black,
-                                ),
-                          );
-                        } else {
-                          return Container();
-                        }
-                      },
-                    ),
-                  ],
+    final overlay = OverlayEntry(
+      builder: (context) {
+        return Material(
+          color: Colors.black.withAlpha(150),
+          child: Center(
+            child: Container(
+              constraints: BoxConstraints(
+                maxHeight: size.height * 0.8,
+                maxWidth: size.width * 0.8,
+                minWidth: size.width * 0.5,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20.h(context)),
+                color: Colors.white,
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(16.h(context)),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(height: 10.h(context)),
+                      const CircularProgressIndicator(),
+                      SizedBox(height: 10.h(context)),
+                      StreamBuilder<String>(
+                        stream: textController.stream,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return Text(
+                              snapshot.requireData,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(
+                                    color: Colors.black,
+                                  ),
+                            );
+                          } else {
+                            return Container();
+                          }
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
 
     state.insert(overlay);
 
