@@ -21,7 +21,7 @@ void main() async {
 class DWallDrop extends ConsumerWidget {
   const DWallDrop({super.key});
 
-  // This widget is the root of your application.
+  // This widget is the root of your application
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     SystemChrome.setSystemUIOverlayStyle(

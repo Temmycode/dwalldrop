@@ -4,10 +4,8 @@ import 'package:dwalldrop/app/extensions/xfile_to_file_extension.dart';
 import 'package:dwalldrop/app/helpers/image_picker_helper.dart';
 import 'package:dwalldrop/app/widgets/app_snack_bar.dart';
 import 'package:dwalldrop/authentication/provider/is_logged_in_provider.dart';
-import 'package:dwalldrop/backend/enums/upload_result.dart';
 import 'package:dwalldrop/backend/state/providers/upload_wallpaper_provider.dart';
 import 'package:dwalldrop/setup/colors/app_colors.dart';
-import 'package:dwalldrop/setup/images/image.dart';
 import 'package:dwalldrop/setup/text/title_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -68,7 +66,7 @@ class _UploadWallpaperPageState extends ConsumerState<UploadWallpaperPage> {
   @override
   Widget build(BuildContext context) {
     final isLoggedIn = ref.watch(isLoggedInProvider);
-    final uploadComplete = ref.watch(uploadWallpaperProvider);
+    // final uploadComplete = ref.watch(uploadWallpaperProvider);
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
@@ -122,15 +120,7 @@ class _UploadWallpaperPageState extends ConsumerState<UploadWallpaperPage> {
                   color: AppColors.loginColor,
                 ),
                 child: wallpaperFile == null
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(
-                          25.h(context),
-                        ),
-                        child: Image.asset(
-                          AppImages.kylo,
-                          fit: BoxFit.cover,
-                        ),
-                      )
+                    ? const SizedBox()
                     : ClipRRect(
                         borderRadius: BorderRadius.circular(
                           25.h(context),
@@ -170,7 +160,6 @@ class _UploadWallpaperPageState extends ConsumerState<UploadWallpaperPage> {
               SizedBox(height: 50.h(context)),
 
               // GIVE YOUR WALLPAPER A NAME
-
               SizedBox(
                 height: 53.h(context),
                 width: double.maxFinite,
@@ -239,16 +228,13 @@ class _UploadWallpaperPageState extends ConsumerState<UploadWallpaperPage> {
                     InkWell(
                       borderRadius: BorderRadius.circular(40.h(context)),
                       onTap: () async {
-                        // TODO : CALCULATE THE IMAGE DIMENSIONS AND THE WALLPAPERSIZE
                         await uploadFunction(
                           wallpaperFile: wallpaperFile,
                           imageDimensions: '',
-                        );
-                        // exit this screen if the upload was successful
-                        if (uploadComplete.result == UploadResult.success) {
+                        ).whenComplete(() {
                           // ignore: use_build_context_synchronously
                           Navigator.of(context).pop();
-                        }
+                        });
                       },
                       child: Ink(
                         height: 51.h(context),

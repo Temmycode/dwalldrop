@@ -9,7 +9,9 @@ class UploadWallpaperNotifier extends StateNotifier<UploadState> {
   final Ref ref;
   final UploadWallpaperClient _uploadClient = UploadWallpaperClient();
   UploadWallpaperNotifier({required this.ref})
-      : super(const UploadState.unknown());
+      : super(
+          const UploadState.unknown(),
+        );
 
   Future<void> uploadWallpaper({
     required File wallpaperFile,

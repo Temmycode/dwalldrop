@@ -5,6 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../app/widgets/app_bar.dart' as bar;
+import '../providers/controllers/app_page_controller.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -14,13 +16,23 @@ class HomePage extends ConsumerWidget {
     final int currentIndex = ref.watch(homePageIndexController);
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      body: PageView(
-        physics: const NeverScrollableScrollPhysics(),
-        key: key,
-        controller: controller,
-        children: pages,
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            // APP BAR
+            const bar.AppBarWidget(),
+            // VIEW OF THE SCREENS
+            SliverFillRemaining(
+              child: PageView(
+                key: key,
+                physics: const NeverScrollableScrollPhysics(),
+                controller: controller,
+                children: pages,
+              ),
+            ),
+          ],
+        ),
       ),
-      //  pages[currentIndex],
       bottomNavigationBar: NavigationBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -63,8 +75,3 @@ class HomePage extends ConsumerWidget {
     );
   }
 }
-
-final pageController = Provider<PageController>((ref) {
-  final controller = PageController();
-  return controller;
-});
