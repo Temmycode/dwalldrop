@@ -1,1 +1,1 @@
-enum LikeResult { success, failure }
+enum LikeResult { liked, unliked, failure }

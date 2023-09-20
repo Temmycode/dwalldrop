@@ -1,3 +1,5 @@
+import 'dart:developer';
+import 'package:dwalldrop/backend/constants/database_constants.dart';
 import 'package:dwalldrop/backend/enums/like_result.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,18 +20,25 @@ class LikeClient {
 
         if (likedBy.contains(userId)) {
           // the user has already the liked the image
-          return LikeResult.success;
+          // then unlike it
+          likedBy.remove(userId);
+          await firestore
+              .collection(DatabaseConstants.wallpaperCollection)
+              .doc(wallpaperId)
+              .update({'likeBy': likedBy});
+          return LikeResult.unliked;
         } else {
           // update the firestore document to mark the image as lied by the user
           likedBy.add(userId);
           await firestore
-              .collection('wallpapers')
+              .collection(DatabaseConstants.wallpaperCollection)
               .doc(wallpaperId)
               .update({'likedBy': likedBy});
+          return LikeResult.liked;
         }
-        return LikeResult.success;
       }
     } catch (e) {
+      log(e.toString());
       return LikeResult.failure;
     }
   }

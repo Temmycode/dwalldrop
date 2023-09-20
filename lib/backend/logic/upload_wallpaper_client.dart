@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dwalldrop/backend/constants/firestore_constants.dart';
+import 'package:dwalldrop/backend/constants/database_constants.dart';
 import 'package:dwalldrop/backend/models/wallpaper_models.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -25,7 +25,7 @@ class UploadWallpaperClient {
       // upload the file to firebase storage first of all
       final storageRef = FirebaseStorage.instance
           .ref()
-          .child(FirestoreConstants.wallpaperCollection)
+          .child(DatabaseConstants.wallpaperCollection)
           .child(userId)
           .child(wallpaperName);
       await storageRef.putFile(wallpaperFile);
@@ -34,7 +34,7 @@ class UploadWallpaperClient {
       final wallpaperSize = metadata.size;
       // upload the wallpaper model to firestore database
       final wallpaperId = const Uuid().v1();
-      final wallpaperModel = WallpaperModel(
+      final wallpaperModel = Wallpaper(
         wallpaperName: wallpaperName,
         creatorName: username,
         imageUrl: wallpaperUrl,
@@ -45,7 +45,7 @@ class UploadWallpaperClient {
         userAvatar: userAvatar,
       );
       await FirebaseFirestore.instance
-          .collection(FirestoreConstants.wallpaperCollection)
+          .collection(DatabaseConstants.wallpaperCollection)
           .doc(wallpaperId)
           .set(wallpaperModel.toJson());
 

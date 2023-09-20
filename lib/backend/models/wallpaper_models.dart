@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart' show immutable;
 
 @immutable
-class WallpaperModel {
+class Wallpaper {
   final String wallpaperId;
   final String wallpaperName;
   final String creatorName;
@@ -12,7 +12,7 @@ class WallpaperModel {
   final int noDownloaded;
   final List likedBy;
 
-  const WallpaperModel({
+  const Wallpaper({
     required this.wallpaperId,
     required this.wallpaperName,
     required this.creatorName,
@@ -34,9 +34,9 @@ class WallpaperModel {
         'userAvatar': userAvatar,
       };
 
-  factory WallpaperModel.fromJson(DocumentSnapshot snapshot) {
+  factory Wallpaper.fromJson(DocumentSnapshot snapshot) {
     final snap = snapshot.data() as Map<String, dynamic>;
-    return WallpaperModel(
+    return Wallpaper(
       wallpaperId: snap['wallpaperId'],
       wallpaperName: snap['wallpaperName'],
       creatorName: snap['creatorName'],
@@ -49,7 +49,7 @@ class WallpaperModel {
   }
 
   @override
-  bool operator ==(covariant WallpaperModel other) =>
+  bool operator ==(covariant Wallpaper other) =>
       (wallpaperId == other.wallpaperId &&
           wallpaperName == other.wallpaperName &&
           creatorName == other.creatorName &&
@@ -71,7 +71,7 @@ class WallpaperModel {
 
   @override
   String toString() =>
-      '''WallpaperModel(wallpaperId: $wallpaperId, wallpaperName: $wallpaperName,
+      '''Wallpaper(wallpaperId: $wallpaperId, wallpaperName: $wallpaperName,
        creatorName: $creatorName, imageUrl: $imageUrl, likedBy: $likedBy,
         wallpaperSize: $wallpaperSize, noDownloaded: $noDownloaded, userAvatar: $userAvatar)''';
 }

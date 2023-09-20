@@ -2,6 +2,7 @@ import 'package:dwalldrop/app/extensions/dimensions.dart';
 import 'package:dwalldrop/app/providers/is_upload_hidden_provider.dart';
 import 'package:dwalldrop/app/screens/upload_wallpaper_page.dart';
 import 'package:dwalldrop/app/screens/wallpaper_page.dart';
+import 'package:dwalldrop/app/widgets/app_bar.dart';
 import 'package:dwalldrop/app/widgets/ondisplay_wallpaper_containers.dart';
 import 'package:dwalldrop/app/widgets/wallpaper_containers.dart';
 import 'package:dwalldrop/mock/ondisplay_wallpaper_mock.dart';
@@ -69,6 +70,8 @@ class _ExplorePageState extends ConsumerState<ExplorePage>
           CustomScrollView(
             controller: _scrollController,
             slivers: [
+              // APP BAR
+              const AppBarWidget(),
               // PAGE VIEW OF WALLPAPERS
               SliverToBoxAdapter(
                 child: Column(
