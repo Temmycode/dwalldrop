@@ -1,6 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dwalldrop/app/extensions/dimensions.dart';
 import 'package:dwalldrop/app/widgets/action_buttons.dart';
+import 'package:dwalldrop/app/widgets/app_snack_bar.dart';
+import 'package:dwalldrop/authentication/provider/is_logged_in_provider.dart';
+import 'package:dwalldrop/backend/state/providers/like_provider.dart';
 import 'package:dwalldrop/setup/colors/app_colors.dart';
 import 'package:dwalldrop/setup/images/image.dart';
 import 'package:dwalldrop/setup/text/small_text.dart';
@@ -8,15 +11,18 @@ import 'package:dwalldrop/setup/text/title_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../backend/enums/like_result.dart';
 import '../widgets/wallpaper_info_container.dart';
 
 class WallpaperPage extends ConsumerStatefulWidget {
+  final String wallpaperId;
   final String wallpaper;
   final String userAvatar;
   final String wallpaperName;
   final String username;
   const WallpaperPage({
     super.key,
+    required this.wallpaperId,
     required this.wallpaper,
     required this.userAvatar,
     required this.wallpaperName,
@@ -29,6 +35,7 @@ class WallpaperPage extends ConsumerStatefulWidget {
 class _WallpaperPageState extends ConsumerState<WallpaperPage> {
   @override
   Widget build(BuildContext context) {
+    final isLoggedIn = ref.watch(isLoggedInProvider);
     return Scaffold(
       body: SafeArea(
         minimum: EdgeInsets.symmetric(horizontal: 28.w(context)),
@@ -67,7 +74,7 @@ class _WallpaperPageState extends ConsumerState<WallpaperPage> {
                     CircleAvatar(
                       backgroundImage: NetworkImage(widget.userAvatar),
                       backgroundColor: AppColors.userAccountColor,
-                      radius: 25.h(context),
+                      radius: 20.h(context),
                     ),
                     SizedBox(width: 8.w(context)),
                     Column(
@@ -98,10 +105,38 @@ class _WallpaperPageState extends ConsumerState<WallpaperPage> {
                       size: 26.h(context),
                     ),
                     SizedBox(width: 17.w(context)),
-                    Icon(
-                      CupertinoIcons.heart,
-                      size: 26.h(context),
-                      color: Colors.white,
+                    GestureDetector(
+                      onTap: () {
+                        // IF THE USER IS LOGGED IN LIKE, IF NOT THEN DISPLAY A SNACK BAR OF THE SITUATION
+                        if (isLoggedIn) {
+                          ref
+                              .read(likeProvider.notifier)
+                              .likeWallpaper(wallpaperId: widget.wallpaperId);
+                        } else {
+                          appSnackBar(context, "Login to like wallpapers");
+                          return;
+                        }
+                      },
+                      child: Consumer(builder: (context, ref, child) {
+                        final likeState = ref.watch(likeProvider);
+                        final isLiked = likeState.result;
+                        // HANDLING LIKES: IF THE LIKE FUNCTION IS LOADING THEN INSTANTIATE THE LIKE
+                        return likeState.isLoading
+                            ? Icon(
+                                CupertinoIcons.heart_fill,
+                                size: 26.h(context),
+                                color: Colors.white,
+                              )
+                            : Icon(
+                                isLiked == LikeResult.liked
+                                    ? CupertinoIcons.heart_fill
+                                    : isLiked == LikeResult.unliked
+                                        ? CupertinoIcons.heart
+                                        : CupertinoIcons.heart,
+                                size: 26.h(context),
+                                color: Colors.white,
+                              );
+                      }),
                     ),
                   ],
                 )

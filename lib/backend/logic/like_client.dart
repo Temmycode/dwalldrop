@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:dwalldrop/backend/constants/database_constants.dart';
 import 'package:dwalldrop/backend/enums/like_result.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dwalldrop/backend/models/wallpaper_models.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LikeClient {
@@ -33,7 +34,26 @@ class LikeClient {
           await firestore
               .collection(DatabaseConstants.wallpaperCollection)
               .doc(wallpaperId)
-              .update({'likedBy': likedBy});
+              .update({'likedBy': likedBy}).whenComplete(() {
+            // CREATE A WALLPAPER INSTANCE THAT YOU CAN ADD TO THE FAVOURTIES COLLECTION
+            final updatedWallpaper = Wallpaper(
+                wallpaperId: wallpaperId,
+                wallpaperName: wallpaperDoc['wallpaperName'],
+                creatorName: wallpaperDoc['creatorName'],
+                imageUrl: wallpaperDoc['imageUrl'],
+                likedBy: likedBy,
+                wallpaperSize: wallpaperDoc['wallpaperSize'],
+                noDownloaded: wallpaperDoc['noDownloaded'],
+                userAvatar: wallpaperDoc['userAvatar']);
+
+            // UPLOAD THE UPDATED WALLPAPER TO THE FAVOURTIES COLLECTION
+            FirebaseFirestore.instance
+                .collection(DatabaseConstants.favouriteCollection)
+                .doc(userId)
+                .collection(DatabaseConstants.wallpaperCollection)
+                .doc()
+                .set(updatedWallpaper.toJson());
+          });
           return LikeResult.liked;
         }
       }

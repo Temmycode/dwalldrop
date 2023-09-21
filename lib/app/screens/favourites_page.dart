@@ -8,7 +8,6 @@ import 'package:dwalldrop/setup/text/title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import '../../mock/wallpaper_mock_data.dart';
 import '../widgets/wallpaper_containers.dart';
 
 class FavouritesPage extends StatefulWidget {
@@ -59,10 +58,9 @@ class _FavouritesPageState extends State<FavouritesPage>
                               crossAxisCount: 2,
                             ),
                             crossAxisSpacing: 13,
-                            itemCount: wallpaperMockData.length,
+                            itemCount: wallpaper.length,
                             itemBuilder: (context, index) {
-                              final wallpaper = wallpaperMockData[index];
-
+                              final favourites = wallpaper[index];
                               return GestureDetector(
                                 onTap: () {
                                   // NAVIGATE TO THE WALLPAPER SETTING PAGE
@@ -70,21 +68,21 @@ class _FavouritesPageState extends State<FavouritesPage>
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => WallpaperPage(
-                                        wallpaper: wallpaper[0],
-                                        userAvatar:
-                                            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9ZGIm8lYWI9-2TH7LQDLEcbVGaLyays2e9Q&usqp=CAU',
-                                        wallpaperName: wallpaper[1],
-                                        username: wallpaper[2],
+                                        wallpaperId: favourites.wallpaperId,
+                                        wallpaper: favourites.imageUrl,
+                                        userAvatar: favourites.userAvatar,
+                                        wallpaperName: favourites.wallpaperName,
+                                        username: favourites.creatorName,
                                       ),
                                     ),
                                   );
                                 },
                                 child: WallpaperContainers(
                                   index: index,
-                                  image: wallpaper[0],
-                                  wallpaperName: wallpaper[1],
-                                  creator: wallpaper[2],
-                                  liked: wallpaper[3],
+                                  image: favourites.imageUrl,
+                                  wallpaperName: favourites.wallpaperName,
+                                  creator: favourites.creatorName,
+                                  liked: true,
                                 ),
                               );
                             },
