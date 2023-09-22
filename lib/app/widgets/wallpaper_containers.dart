@@ -1,3 +1,5 @@
+import 'dart:developer';
+import 'package:flutter/services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dwalldrop/app/extensions/dimensions.dart';
 import 'package:dwalldrop/setup/text/small_text.dart';
@@ -5,8 +7,11 @@ import 'package:dwalldrop/setup/text/title_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../backend/state/providers/like_provider.dart';
 
 class WallpaperContainers extends ConsumerWidget {
+  final String wallpaperId;
+  final String heroKey;
   final int index;
   final String image;
   final String wallpaperName;
@@ -15,6 +20,8 @@ class WallpaperContainers extends ConsumerWidget {
 
   const WallpaperContainers({
     super.key,
+    required this.wallpaperId,
+    required this.heroKey,
     required this.index,
     required this.image,
     required this.wallpaperName,
@@ -40,7 +47,7 @@ class WallpaperContainers extends ConsumerWidget {
       child: Stack(
         children: [
           Hero(
-            tag: wallpaperName,
+            tag: heroKey,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20.h(context)),
               child: CachedNetworkImage(
@@ -85,9 +92,15 @@ class WallpaperContainers extends ConsumerWidget {
                     ],
                   ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () async {
+                      HapticFeedback.lightImpact();
+                      await ref
+                          .read(likeProvider.notifier)
+                          .likeWallpaper(wallpaperId: wallpaperId);
+                      log(ref.read(likeProvider).result.toString());
+                    },
                     child: Icon(
-                      CupertinoIcons.heart,
+                      liked ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
                       size: 23.3.h(context),
                       color: Colors.white,
                     ),

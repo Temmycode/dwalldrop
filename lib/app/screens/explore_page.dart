@@ -15,6 +15,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:uuid/uuid.dart';
 import '../../setup/text/title_text.dart';
 import '../providers/on_display_wallpaper_page_provider.dart';
 import '../providers/wallpaper_providers.dart';
@@ -144,6 +145,7 @@ class _ExplorePageState extends ConsumerState<ExplorePage>
                                     child: TitleText(text: "No wallpapers yet"),
                                   );
                                 } else {
+                                  final heroKey = const Uuid().v1();
                                   return GestureDetector(
                                     onTap: () {
                                       // NAVIGATE TO THE WALLPAPER SETTING PAGE
@@ -151,17 +153,16 @@ class _ExplorePageState extends ConsumerState<ExplorePage>
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) => WallpaperPage(
+                                            heroKey: heroKey,
                                             wallpaper: wallpaper.imageUrl,
-                                            userAvatar: wallpaper.userAvatar,
-                                            wallpaperName:
-                                                wallpaper.wallpaperName,
-                                            username: wallpaper.creatorName,
                                             wallpaperId: wallpaper.wallpaperId,
                                           ),
                                         ),
                                       );
                                     },
                                     child: WallpaperContainers(
+                                      wallpaperId: wallpaper.wallpaperId,
+                                      heroKey: heroKey,
                                       index: index,
                                       image: wallpaper.imageUrl,
                                       wallpaperName: wallpaper.wallpaperName,

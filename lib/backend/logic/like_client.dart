@@ -23,10 +23,21 @@ class LikeClient {
           // the user has already the liked the image
           // then unlike it
           likedBy.remove(userId);
+          log(likedBy.toString());
+          // update the wallpaper in the wallpaper collection by removing the user
           await firestore
               .collection(DatabaseConstants.wallpaperCollection)
               .doc(wallpaperId)
-              .update({'likeBy': likedBy});
+              .update({'likedBy': likedBy}).whenComplete(() async {
+            // delete the wallpaper from the favourites collection
+            await firestore
+                .collection(DatabaseConstants.favouriteCollection)
+                .doc(userId)
+                .collection(DatabaseConstants.wallpaperCollection)
+                .doc(wallpaperId)
+                .delete();
+          });
+
           return LikeResult.unliked;
         } else {
           // update the firestore document to mark the image as lied by the user
@@ -47,11 +58,11 @@ class LikeClient {
                 userAvatar: wallpaperDoc['userAvatar']);
 
             // UPLOAD THE UPDATED WALLPAPER TO THE FAVOURTIES COLLECTION
-            FirebaseFirestore.instance
+            firestore
                 .collection(DatabaseConstants.favouriteCollection)
                 .doc(userId)
                 .collection(DatabaseConstants.wallpaperCollection)
-                .doc()
+                .doc(wallpaperId)
                 .set(updatedWallpaper.toJson());
           });
           return LikeResult.liked;

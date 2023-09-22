@@ -1,5 +1,7 @@
+import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dwalldrop/app/extensions/dimensions.dart';
+import 'package:dwalldrop/app/providers/get_one_wallpaper_provider.dart';
 import 'package:dwalldrop/app/widgets/action_buttons.dart';
 import 'package:dwalldrop/app/widgets/app_snack_bar.dart';
 import 'package:dwalldrop/authentication/provider/is_logged_in_provider.dart';
@@ -8,25 +10,22 @@ import 'package:dwalldrop/setup/colors/app_colors.dart';
 import 'package:dwalldrop/setup/images/image.dart';
 import 'package:dwalldrop/setup/text/small_text.dart';
 import 'package:dwalldrop/setup/text/title_text.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../backend/enums/like_result.dart';
 import '../widgets/wallpaper_info_container.dart';
 
 class WallpaperPage extends ConsumerStatefulWidget {
+  final String heroKey;
   final String wallpaperId;
   final String wallpaper;
-  final String userAvatar;
-  final String wallpaperName;
-  final String username;
   const WallpaperPage({
     super.key,
+    required this.heroKey,
     required this.wallpaperId,
     required this.wallpaper,
-    required this.userAvatar,
-    required this.wallpaperName,
-    required this.username,
   });
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _WallpaperPageState();
@@ -35,6 +34,7 @@ class WallpaperPage extends ConsumerStatefulWidget {
 class _WallpaperPageState extends ConsumerState<WallpaperPage> {
   @override
   Widget build(BuildContext context) {
+    // final wallpaper = ref.watch(getOneWallpaperProvider(widget.wallpaperId));
     final isLoggedIn = ref.watch(isLoggedInProvider);
     return Scaffold(
       body: SafeArea(
@@ -44,7 +44,7 @@ class _WallpaperPageState extends ConsumerState<WallpaperPage> {
             SizedBox(height: 31.h(context)),
             // IMAGE CONTAINER
             Hero(
-              tag: widget.wallpaperName,
+              tag: widget.heroKey,
               child: Container(
                 height: 335.h(context),
                 width: 337.h(context),
@@ -69,34 +69,45 @@ class _WallpaperPageState extends ConsumerState<WallpaperPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    CircleAvatar(
-                      backgroundImage: NetworkImage(widget.userAvatar),
-                      backgroundColor: AppColors.userAccountColor,
-                      radius: 20.h(context),
-                    ),
-                    SizedBox(width: 8.w(context)),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // WALLPAPER NAME
-                        TitleText(
-                          text: widget.wallpaperName,
-                          size: 15.h(context),
-                        ),
+                Consumer(builder: (context, ref, child) {
+                  final wallpaper =
+                      ref.watch(getOneWallpaperProvider(widget.wallpaperId));
+                  return wallpaper.when(
+                    data: (wallpaperInfo) {
+                      return Row(
+                        children: [
+                          CircleAvatar(
+                            backgroundImage:
+                                NetworkImage(wallpaperInfo.userAvatar),
+                            backgroundColor: AppColors.userAccountColor,
+                            radius: 20.h(context),
+                          ),
+                          SizedBox(width: 8.w(context)),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              // WALLPAPER NAME
+                              TitleText(
+                                text: wallpaperInfo.wallpaperName,
+                                size: 15.h(context),
+                              ),
 
-                        // WALLPAPER USER NAME
-                        TitleText(
-                          text: widget.username,
-                          // color: Colors.white,
-                          size: 11.h(context),
-                        )
-                      ],
-                    )
-                  ],
-                ),
+                              // WALLPAPER USER NAME
+                              TitleText(
+                                text: wallpaperInfo.creatorName,
+                                // color: Colors.white,
+                                size: 11.h(context),
+                              )
+                            ],
+                          )
+                        ],
+                      );
+                    },
+                    error: (error, stk) => Container(),
+                    loading: () => const CircularProgressIndicator(),
+                  );
+                }),
                 Row(
                   children: [
                     ImageIcon(
@@ -106,12 +117,14 @@ class _WallpaperPageState extends ConsumerState<WallpaperPage> {
                     ),
                     SizedBox(width: 17.w(context)),
                     GestureDetector(
-                      onTap: () {
+                      onTap: () async {
+                        HapticFeedback.lightImpact();
                         // IF THE USER IS LOGGED IN LIKE, IF NOT THEN DISPLAY A SNACK BAR OF THE SITUATION
                         if (isLoggedIn) {
-                          ref
+                          await ref
                               .read(likeProvider.notifier)
                               .likeWallpaper(wallpaperId: widget.wallpaperId);
+                          log(ref.read(likeProvider).result.toString());
                         } else {
                           appSnackBar(context, "Login to like wallpapers");
                           return;
@@ -119,7 +132,10 @@ class _WallpaperPageState extends ConsumerState<WallpaperPage> {
                       },
                       child: Consumer(builder: (context, ref, child) {
                         final likeState = ref.watch(likeProvider);
-                        final isLiked = likeState.result;
+                        // the wallpaper from the wallpaperId
+                        final wallpaper = ref
+                            .watch(getOneWallpaperProvider(widget.wallpaperId));
+                        // final isLiked = likeState.result;
                         // HANDLING LIKES: IF THE LIKE FUNCTION IS LOADING THEN INSTANTIATE THE LIKE
                         return likeState.isLoading
                             ? Icon(
@@ -127,14 +143,28 @@ class _WallpaperPageState extends ConsumerState<WallpaperPage> {
                                 size: 26.h(context),
                                 color: Colors.white,
                               )
-                            : Icon(
-                                isLiked == LikeResult.liked
-                                    ? CupertinoIcons.heart_fill
-                                    : isLiked == LikeResult.unliked
-                                        ? CupertinoIcons.heart
-                                        : CupertinoIcons.heart,
-                                size: 26.h(context),
-                                color: Colors.white,
+                            :
+                            // get the information from the wallpaper backend and use it to like the wallpaper
+                            wallpaper.when(
+                                data: (wallpaperInfo) {
+                                  final userId =
+                                      FirebaseAuth.instance.currentUser?.uid;
+                                  // the like is determined if the users name is contained in the likeBy list
+                                  final isLiked =
+                                      wallpaperInfo.likedBy.contains(userId!);
+                                  return Icon(
+                                    isLiked == true
+                                        ? CupertinoIcons.heart_fill
+                                        : isLiked == false
+                                            ? CupertinoIcons.heart
+                                            : CupertinoIcons.heart,
+                                    size: 26.h(context),
+                                    color: Colors.white,
+                                  );
+                                },
+                                error: (error, stk) => Container(),
+                                loading: () =>
+                                    const CircularProgressIndicator(),
                               );
                       }),
                     ),

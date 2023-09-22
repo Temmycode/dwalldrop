@@ -28,6 +28,7 @@ class AccountPage extends ConsumerWidget {
                     size: 13.h(context),
                     color: AppColors.blueColor,
                   ),
+                  // TITLE
                   TitleText(
                     text: "Settings",
                     size: 18.h(context),
@@ -44,6 +45,8 @@ class AccountPage extends ConsumerWidget {
               ),
             ),
             SizedBox(height: 20.h(context)),
+            // IT CONTAINS THE IMAGE OF THE USER
+            // NAME AND EMAIL
             const LoginContainer(),
             SizedBox(height: 17.h(context)),
             ListView(

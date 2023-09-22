@@ -8,6 +8,7 @@ import 'package:dwalldrop/setup/text/title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:uuid/uuid.dart';
 import '../widgets/wallpaper_containers.dart';
 
 class FavouritesPage extends StatefulWidget {
@@ -47,6 +48,8 @@ class _FavouritesPageState extends State<FavouritesPage>
                             child: TitleText(text: "No favourites yet"),
                           );
                         } else {
+                          final heroKey = const Uuid().v1();
+
                           return MasonryGridView.builder(
                             padding: EdgeInsets.symmetric(
                               horizontal: 13.w(context),
@@ -68,16 +71,16 @@ class _FavouritesPageState extends State<FavouritesPage>
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => WallpaperPage(
+                                        heroKey: heroKey,
                                         wallpaperId: favourites.wallpaperId,
                                         wallpaper: favourites.imageUrl,
-                                        userAvatar: favourites.userAvatar,
-                                        wallpaperName: favourites.wallpaperName,
-                                        username: favourites.creatorName,
                                       ),
                                     ),
                                   );
                                 },
                                 child: WallpaperContainers(
+                                  wallpaperId: favourites.wallpaperId,
+                                  heroKey: heroKey,
                                   index: index,
                                   image: favourites.imageUrl,
                                   wallpaperName: favourites.wallpaperName,

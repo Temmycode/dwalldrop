@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dwalldrop/app/extensions/dimensions.dart';
 import 'package:dwalldrop/authentication/provider/auth_state_provider.dart';
 import 'package:dwalldrop/authentication/provider/is_logged_in_provider.dart';
 import 'package:dwalldrop/setup/colors/app_colors.dart';
 import 'package:dwalldrop/setup/text/small_text.dart';
 import 'package:dwalldrop/setup/text/title_text.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../setup/images/image.dart';
@@ -17,6 +19,7 @@ class LoginContainer extends ConsumerWidget {
     // THERE SHOULD BE A IS LOGGED IN VARIABLE
     final isLoggedIn = ref.watch(isLoggedInProvider);
     // THERE SHOULD ALSO BE A IS LOADING VARIABLE
+    final currentUser = FirebaseAuth.instance.currentUser;
 
     return Ink(
       height: 262.h(context),
@@ -33,26 +36,32 @@ class LoginContainer extends ConsumerWidget {
         children: [
           // THE USER'S IMAGE ICON, IT IS JUST AN EMPTY USER ICON IF
           // THE USER IS NOT LOGGED IN
-          Ink(
-            padding: EdgeInsets.all(3.h(context)),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(50.h(context)),
-              border: Border.all(
-                color: AppColors.userAccountColor,
-                width: 7,
-              ),
-            ),
-            child: ImageIcon(
-              const AssetImage(AppImages.user),
-              color: AppColors.userAccountColor,
-              size: 60.h(context),
-            ),
-          ),
+          isLoggedIn
+              ? CircleAvatar(
+                  radius: 40.h(context),
+                  backgroundImage:
+                      CachedNetworkImageProvider(currentUser!.photoURL!),
+                )
+              : Ink(
+                  padding: EdgeInsets.all(3.h(context)),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50.h(context)),
+                    border: Border.all(
+                      color: AppColors.userAccountColor,
+                      width: 7,
+                    ),
+                  ),
+                  child: ImageIcon(
+                    const AssetImage(AppImages.user),
+                    color: AppColors.userAccountColor,
+                    size: 60.h(context),
+                  ),
+                ),
           SizedBox(height: 15.h(context)),
           // THIS IS YOUR NAME IF SIGNED IN
           TitleText(
             text: isLoggedIn
-                ? "Signed in things naa"
+                ? currentUser!.displayName!
                 : "Save & Sync Your Favourites",
             size: 20.h(context),
             color: AppColors.yellowColor,
@@ -60,7 +69,7 @@ class LoginContainer extends ConsumerWidget {
           // THIS IS YOUR EMAIL IF SIGNED IN
           SmallText(
             text: isLoggedIn
-                ? "You are now signed in"
+                ? currentUser!.email!
                 : "Sign in below to get started",
             size: 13.h(context),
             weight: FontWeight.w500,

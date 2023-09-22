@@ -4,24 +4,17 @@ import 'package:dwalldrop/backend/constants/database_constants.dart';
 import 'package:dwalldrop/backend/models/wallpaper_models.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final wallpaperProviders = StreamProvider.autoDispose<List<Wallpaper>>((ref) {
-  final controller = StreamController<List<Wallpaper>>();
-
-  controller.onListen = () {
-    controller.sink.add([]);
-  };
+final getOneWallpaperProvider = StreamProvider.autoDispose
+    .family<Wallpaper, String>((ref, String wallpaperId) {
+  final controller = StreamController<Wallpaper>();
 
   final sub = FirebaseFirestore.instance
       .collection(DatabaseConstants.wallpaperCollection)
-      .limit(10)
+      .where("wallpaperId", isEqualTo: wallpaperId)
       .snapshots()
       .listen((snapshot) {
-    final documents = snapshot.docs;
-    final result = documents
-        .map(
-          (snap) => Wallpaper.fromJson(snap),
-        )
-        .toList();
+    final document = snapshot.docs.first;
+    final result = Wallpaper.fromJson(document);
     controller.sink.add(result);
   });
 
