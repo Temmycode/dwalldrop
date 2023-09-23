@@ -156,6 +156,8 @@ class _ExplorePageState extends ConsumerState<ExplorePage>
                                             heroKey: heroKey,
                                             wallpaper: wallpaper.imageUrl,
                                             wallpaperId: wallpaper.wallpaperId,
+                                            wallpaperName:
+                                                wallpaper.wallpaperName,
                                           ),
                                         ),
                                       );

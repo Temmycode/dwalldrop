@@ -74,6 +74,7 @@ class _FavouritesPageState extends State<FavouritesPage>
                                         heroKey: heroKey,
                                         wallpaperId: favourites.wallpaperId,
                                         wallpaper: favourites.imageUrl,
+                                        wallpaperName: favourites.wallpaperName,
                                       ),
                                     ),
                                   );

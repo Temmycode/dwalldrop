@@ -1,0 +1,1 @@
+enum DownloadResult { success, failure }

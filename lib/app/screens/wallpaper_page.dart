@@ -5,6 +5,9 @@ import 'package:dwalldrop/app/providers/get_one_wallpaper_provider.dart';
 import 'package:dwalldrop/app/widgets/action_buttons.dart';
 import 'package:dwalldrop/app/widgets/app_snack_bar.dart';
 import 'package:dwalldrop/authentication/provider/is_logged_in_provider.dart';
+import 'package:dwalldrop/backend/enums/download_result.dart';
+import 'package:dwalldrop/backend/logic/dowload_wallpaper_client.dart';
+import 'package:dwalldrop/backend/state/providers/download_wallpaper_state_provider.dart';
 import 'package:dwalldrop/backend/state/providers/like_provider.dart';
 import 'package:dwalldrop/setup/colors/app_colors.dart';
 import 'package:dwalldrop/setup/images/image.dart';
@@ -21,11 +24,13 @@ class WallpaperPage extends ConsumerStatefulWidget {
   final String heroKey;
   final String wallpaperId;
   final String wallpaper;
+  final String wallpaperName;
   const WallpaperPage({
     super.key,
     required this.heroKey,
     required this.wallpaperId,
     required this.wallpaper,
+    required this.wallpaperName,
   });
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _WallpaperPageState();
@@ -175,30 +180,60 @@ class _WallpaperPageState extends ConsumerState<WallpaperPage> {
             SizedBox(height: 14.h(context)),
 
             // SAVE AND SET BUTTON
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // SAVE BUTTON
-                ActionButton(
-                  title: "Save",
-                  icon: ImageIcon(
-                    const AssetImage(AppImages.downloadIcon),
-                    size: 15.h(context),
-                    color: Colors.white,
+            Consumer(builder: (context, ref, child) {
+              final downloadState = ref.watch(downloadWallpaperStateProvider);
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // SAVE BUTTON
+                  InkWell(
+                    // download the wallpaper to the phone
+                    onTap: () async {
+                      await ref
+                          .read(downloadWallpaperStateProvider.notifier)
+                          .downloadWallpaper(
+                            wallpaperName: widget.wallpaperName,
+                            wallpaperUrl: widget.wallpaper,
+                          )
+                          .whenComplete(
+                        () {
+                          // display a snackbar for the different condidtions in for the download
+                          if (downloadState.result == DownloadResult.success &&
+                              !downloadState.isLoading) {
+                            appSnackBar(context, "Wallpapaer downloaded");
+                          } else {
+                            final errorInformation =
+                                DownloadWallpaperClient.error;
+                            appSnackBar(context, errorInformation);
+                          }
+                        },
+                      );
+                    },
+                    borderRadius: BorderRadius.circular(40.h(context)),
+                    child: ActionButton(
+                      isLoading: downloadState.isLoading,
+                      title: "Save",
+                      icon: ImageIcon(
+                        const AssetImage(AppImages.downloadIcon),
+                        size: 15.h(context),
+                        color: Colors.white,
+                      ),
+                      color: AppColors.loginColor,
+                    ),
                   ),
-                  color: AppColors.loginColor,
-                ),
-                // SET THE WALLPAPER
-                ActionButton(
-                  title: "Set",
-                  icon: Icon(
-                    Icons.image_outlined,
-                    size: 18.h(context),
+                  // SET THE WALLPAPER
+                  ActionButton(
+                    isLoading: false,
+                    title: "Set",
+                    icon: Icon(
+                      Icons.image_outlined,
+                      size: 18.h(context),
+                    ),
+                    color: AppColors.loginColor,
                   ),
-                  color: AppColors.loginColor,
-                ),
-              ],
-            ),
+                ],
+              );
+            }),
             SizedBox(height: 25.h(context)),
 
             // DESCRIPTION ON THE WALLPAPER
