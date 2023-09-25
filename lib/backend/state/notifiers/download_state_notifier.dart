@@ -6,7 +6,7 @@ class DownloadWallpaperStateNotifier extends StateNotifier<DownloadState> {
   final downloadClient = const DownloadWallpaperClient();
   DownloadWallpaperStateNotifier() : super(const DownloadState.unkown());
 
-  Future downloadWallpaper({
+  Future<void> downloadWallpaper({
     required String wallpaperName,
     required String wallpaperUrl,
   }) async {
@@ -17,6 +17,17 @@ class DownloadWallpaperStateNotifier extends StateNotifier<DownloadState> {
     );
     state = DownloadState(
       result: download,
+      isLoading: false,
+    );
+  }
+
+  Future<void> setWallpaper({required int location}) async {
+    state = state.copyIsLoading(isLoading: true);
+    final downloadResult = await downloadClient.setWallpaper(
+      location: location,
+    );
+    state = DownloadState(
+      result: downloadResult,
       isLoading: false,
     );
   }

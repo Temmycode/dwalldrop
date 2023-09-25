@@ -48,15 +48,15 @@ class LikeClient {
               .update({'likedBy': likedBy}).whenComplete(() {
             // CREATE A WALLPAPER INSTANCE THAT YOU CAN ADD TO THE FAVOURTIES COLLECTION
             final updatedWallpaper = Wallpaper(
-                wallpaperId: wallpaperId,
-                wallpaperName: wallpaperDoc['wallpaperName'],
-                creatorName: wallpaperDoc['creatorName'],
-                imageUrl: wallpaperDoc['imageUrl'],
-                likedBy: likedBy,
-                wallpaperSize: wallpaperDoc['wallpaperSize'],
-                noDownloaded: wallpaperDoc['noDownloaded'],
-                userAvatar: wallpaperDoc['userAvatar']);
-
+              wallpaperId: wallpaperId,
+              wallpaperName: wallpaperDoc['wallpaperName'],
+              creatorName: wallpaperDoc['creatorName'],
+              imageUrl: wallpaperDoc['imageUrl'],
+              likedBy: likedBy,
+              noDownloaded: wallpaperDoc['noDownloaded'],
+              userAvatar: wallpaperDoc['userAvatar'],
+              size: wallpaperDoc['size'],
+            );
             // UPLOAD THE UPDATED WALLPAPER TO THE FAVOURTIES COLLECTION
             firestore
                 .collection(DatabaseConstants.favouriteCollection)

@@ -18,6 +18,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../widgets/scrollable_widget.dart';
 import '../widgets/wallpaper_info_container.dart';
 
 class WallpaperPage extends ConsumerStatefulWidget {
@@ -222,14 +223,21 @@ class _WallpaperPageState extends ConsumerState<WallpaperPage> {
                     ),
                   ),
                   // SET THE WALLPAPER
-                  ActionButton(
-                    isLoading: false,
-                    title: "Set",
-                    icon: Icon(
-                      Icons.image_outlined,
-                      size: 18.h(context),
+                  InkWell(
+                    onTap: () async {
+                      showDraggableScrollableWidget(context);
+                      // function to set your phone wallpaper to the current Image
+                    },
+                    borderRadius: BorderRadius.circular(40.h(context)),
+                    child: ActionButton(
+                      isLoading: false,
+                      title: "Set",
+                      icon: Icon(
+                        Icons.image_outlined,
+                        size: 18.h(context),
+                      ),
+                      color: AppColors.loginColor,
                     ),
-                    color: AppColors.loginColor,
                   ),
                 ],
               );

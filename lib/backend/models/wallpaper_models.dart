@@ -8,9 +8,9 @@ class Wallpaper {
   final String creatorName;
   final String imageUrl;
   final String userAvatar;
-  final int wallpaperSize;
   final int noDownloaded;
   final List likedBy;
+  final int? size;
 
   const Wallpaper({
     required this.wallpaperId,
@@ -18,9 +18,9 @@ class Wallpaper {
     required this.creatorName,
     required this.imageUrl,
     required this.likedBy,
-    required this.wallpaperSize,
     required this.noDownloaded,
     required this.userAvatar,
+    this.size,
   });
 
   Map<String, dynamic> toJson() => {
@@ -29,9 +29,9 @@ class Wallpaper {
         'creatorName': creatorName,
         'imageUrl': imageUrl,
         'likedBy': likedBy,
-        'wallpaperSize': wallpaperSize,
         'noDownloaded': noDownloaded,
         'userAvatar': userAvatar,
+        'size': size,
       };
 
   factory Wallpaper.fromJson(DocumentSnapshot snapshot) {
@@ -42,9 +42,9 @@ class Wallpaper {
       creatorName: snap['creatorName'],
       imageUrl: snap['imageUrl'],
       likedBy: snap['likedBy'],
-      wallpaperSize: snap['wallpaperSize'],
       noDownloaded: snap['noDownloaded'],
       userAvatar: snap['userAvatar'],
+      // size: snap['size'],
     );
   }
 
@@ -54,8 +54,9 @@ class Wallpaper {
           wallpaperName == other.wallpaperName &&
           creatorName == other.creatorName &&
           imageUrl == other.imageUrl &&
-          wallpaperSize == other.wallpaperSize &&
-          userAvatar == other.userAvatar);
+          userAvatar == other.userAvatar &&
+          size == other.size &&
+          noDownloaded == other.noDownloaded);
 
   @override
   int get hashCode => Object.hashAll(
@@ -64,8 +65,8 @@ class Wallpaper {
           wallpaperName,
           creatorName,
           imageUrl,
-          wallpaperSize,
           userAvatar,
+          size,
         ],
       );
 
@@ -73,5 +74,5 @@ class Wallpaper {
   String toString() =>
       '''Wallpaper(wallpaperId: $wallpaperId, wallpaperName: $wallpaperName,
        creatorName: $creatorName, imageUrl: $imageUrl, likedBy: $likedBy,
-        wallpaperSize: $wallpaperSize, noDownloaded: $noDownloaded, userAvatar: $userAvatar)''';
+        noDownloaded: $noDownloaded, userAvatar: $userAvatar)''';
 }

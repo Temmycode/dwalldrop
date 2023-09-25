@@ -40,9 +40,9 @@ class UploadWallpaperClient {
         imageUrl: wallpaperUrl,
         likedBy: const [],
         noDownloaded: 0,
-        wallpaperSize: wallpaperSize!,
         wallpaperId: wallpaperId,
         userAvatar: userAvatar,
+        size: wallpaperSize!,
       );
       await FirebaseFirestore.instance
           .collection(DatabaseConstants.wallpaperCollection)

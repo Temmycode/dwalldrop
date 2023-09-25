@@ -52,15 +52,15 @@ class _UploadWallpaperPageState extends ConsumerState<UploadWallpaperPage> {
     required File? wallpaperFile,
     required String imageDimensions,
   }) async {
-    if (_wallpaperNameController.text.isNotEmpty && wallpaperFile != null) {
-      await ref.read(uploadWallpaperProvider.notifier).uploadWallpaper(
-            wallpaperFile: wallpaperFile,
-            wallpaperName: _wallpaperNameController.text,
-            imageDimensions: '',
-          );
-    } else {
-      appSnackBar(context, "Fill the necessary things");
-    }
+    await ref
+        .read(
+          uploadWallpaperProvider.notifier,
+        )
+        .uploadWallpaper(
+          wallpaperFile: wallpaperFile!,
+          wallpaperName: _wallpaperNameController.text,
+          imageDimensions: '',
+        );
   }
 
   @override
@@ -228,13 +228,18 @@ class _UploadWallpaperPageState extends ConsumerState<UploadWallpaperPage> {
                     InkWell(
                       borderRadius: BorderRadius.circular(40.h(context)),
                       onTap: () async {
-                        await uploadFunction(
-                          wallpaperFile: wallpaperFile,
-                          imageDimensions: '',
-                        ).whenComplete(() {
-                          // ignore: use_build_context_synchronously
-                          Navigator.of(context).pop();
-                        });
+                        if (_wallpaperNameController.text.isNotEmpty &&
+                            wallpaperFile != null) {
+                          await uploadFunction(
+                            wallpaperFile: wallpaperFile,
+                            imageDimensions: '',
+                          ).whenComplete(() {
+                            // ignore: use_build_context_synchronously
+                            Navigator.of(context).pop();
+                          });
+                        } else {
+                          appSnackBar(context, "Fill the necessary things");
+                        }
                       },
                       child: Ink(
                         height: 51.h(context),
