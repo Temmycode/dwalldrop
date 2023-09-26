@@ -12,7 +12,7 @@ class TitleText extends StatelessWidget {
     required this.text,
     this.size = 12,
     this.weight = FontWeight.bold,
-    this.overflow = TextOverflow.fade,
+    this.overflow = TextOverflow.ellipsis,
     this.color = Colors.white,
   });
 
@@ -24,7 +24,9 @@ class TitleText extends StatelessWidget {
         color: color == Colors.white ? Colors.white : color,
         fontSize: size == 12 ? 12.h(context) : size,
         fontWeight: weight == FontWeight.bold ? FontWeight.bold : weight,
-        overflow: overflow == TextOverflow.fade ? TextOverflow.fade : overflow,
+        overflow: overflow == TextOverflow.ellipsis
+            ? TextOverflow.ellipsis
+            : overflow,
       ),
     );
   }

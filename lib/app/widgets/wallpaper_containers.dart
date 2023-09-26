@@ -86,7 +86,12 @@ class WallpaperContainers extends ConsumerWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      TitleText(text: wallpaperName),
+                      SizedBox(
+                        width: 120.w(context),
+                        child: TitleText(
+                          text: wallpaperName,
+                        ),
+                      ),
                       SizedBox(height: 3.h(context)),
                       SmallText(text: creator),
                     ],
@@ -97,7 +102,9 @@ class WallpaperContainers extends ConsumerWidget {
                       await ref
                           .read(likeProvider.notifier)
                           .likeWallpaper(wallpaperId: wallpaperId);
-                      log(ref.read(likeProvider).result.toString());
+                      log(
+                        ref.read(likeProvider).result.toString(),
+                      );
                     },
                     child: Icon(
                       liked ? CupertinoIcons.heart_fill : CupertinoIcons.heart,

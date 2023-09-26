@@ -20,8 +20,20 @@ showDraggableScrollableWidget(BuildContext context) {
         builder: (context, ScrollController scrollController) {
           return Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.w(context)),
-            child: const Center(
-              child: SetWallpaperScrollable(),
+            child: Center(
+              child: Column(
+                children: [
+                  Ink(
+                    height: 5.h(context),
+                    width: 10.w(context),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.h(context)),
+                      color: Colors.grey.shade400,
+                    ),
+                  ),
+                  const SetWallpaperScrollable(),
+                ],
+              ),
             ),
           );
         },

@@ -6,6 +6,7 @@ import 'package:dwalldrop/app/widgets/action_buttons.dart';
 import 'package:dwalldrop/app/widgets/app_snack_bar.dart';
 import 'package:dwalldrop/authentication/provider/is_logged_in_provider.dart';
 import 'package:dwalldrop/backend/enums/download_result.dart';
+import 'package:dwalldrop/backend/enums/like_result.dart';
 import 'package:dwalldrop/backend/logic/dowload_wallpaper_client.dart';
 import 'package:dwalldrop/backend/state/providers/download_wallpaper_state_provider.dart';
 import 'package:dwalldrop/backend/state/providers/like_provider.dart';
@@ -75,45 +76,47 @@ class _WallpaperPageState extends ConsumerState<WallpaperPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Consumer(builder: (context, ref, child) {
-                  final wallpaper =
-                      ref.watch(getOneWallpaperProvider(widget.wallpaperId));
-                  return wallpaper.when(
-                    data: (wallpaperInfo) {
-                      return Row(
-                        children: [
-                          CircleAvatar(
-                            backgroundImage:
-                                NetworkImage(wallpaperInfo.userAvatar),
-                            backgroundColor: AppColors.userAccountColor,
-                            radius: 20.h(context),
-                          ),
-                          SizedBox(width: 8.w(context)),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              // WALLPAPER NAME
-                              TitleText(
-                                text: wallpaperInfo.wallpaperName,
-                                size: 15.h(context),
-                              ),
+                Consumer(
+                  builder: (context, ref, child) {
+                    final wallpaper =
+                        ref.watch(getOneWallpaperProvider(widget.wallpaperId));
+                    return wallpaper.when(
+                      data: (wallpaperInfo) {
+                        return Row(
+                          children: [
+                            CircleAvatar(
+                              backgroundImage:
+                                  NetworkImage(wallpaperInfo.userAvatar),
+                              backgroundColor: AppColors.userAccountColor,
+                              radius: 20.h(context),
+                            ),
+                            SizedBox(width: 8.w(context)),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                // WALLPAPER NAME
+                                TitleText(
+                                  text: wallpaperInfo.wallpaperName,
+                                  size: 15.h(context),
+                                ),
 
-                              // WALLPAPER USER NAME
-                              TitleText(
-                                text: wallpaperInfo.creatorName,
-                                // color: Colors.white,
-                                size: 11.h(context),
-                              )
-                            ],
-                          )
-                        ],
-                      );
-                    },
-                    error: (error, stk) => Container(),
-                    loading: () => const CircularProgressIndicator(),
-                  );
-                }),
+                                // WALLPAPER USER NAME
+                                TitleText(
+                                  text: wallpaperInfo.creatorName,
+                                  // color: Colors.white,
+                                  size: 11.h(context),
+                                )
+                              ],
+                            )
+                          ],
+                        );
+                      },
+                      error: (error, stk) => Container(),
+                      loading: () => const CircularProgressIndicator(),
+                    );
+                  },
+                ),
                 Row(
                   children: [
                     ImageIcon(
@@ -124,55 +127,76 @@ class _WallpaperPageState extends ConsumerState<WallpaperPage> {
                     SizedBox(width: 17.w(context)),
                     GestureDetector(
                       onTap: () async {
-                        HapticFeedback.lightImpact();
                         // IF THE USER IS LOGGED IN LIKE, IF NOT THEN DISPLAY A SNACK BAR OF THE SITUATION
                         if (isLoggedIn) {
+                          HapticFeedback.lightImpact();
                           await ref
                               .read(likeProvider.notifier)
                               .likeWallpaper(wallpaperId: widget.wallpaperId);
                           log(ref.read(likeProvider).result.toString());
                         } else {
+                          HapticFeedback.lightImpact();
                           appSnackBar(context, "Login to like wallpapers");
                           return;
                         }
                       },
-                      child: Consumer(builder: (context, ref, child) {
-                        final likeState = ref.watch(likeProvider);
-                        // the wallpaper from the wallpaperId
-                        final wallpaper = ref
-                            .watch(getOneWallpaperProvider(widget.wallpaperId));
-                        // final isLiked = likeState.result;
-                        // HANDLING LIKES: IF THE LIKE FUNCTION IS LOADING THEN INSTANTIATE THE LIKE
-                        return likeState.isLoading
-                            ? Icon(
-                                CupertinoIcons.heart_fill,
-                                size: 26.h(context),
-                                color: Colors.white,
-                              )
-                            :
-                            // get the information from the wallpaper backend and use it to like the wallpaper
-                            wallpaper.when(
-                                data: (wallpaperInfo) {
-                                  final userId =
-                                      FirebaseAuth.instance.currentUser?.uid;
-                                  // the like is determined if the users name is contained in the likeBy list
-                                  final isLiked =
-                                      wallpaperInfo.likedBy.contains(userId!);
-                                  return Icon(
-                                    isLiked == true
-                                        ? CupertinoIcons.heart_fill
-                                        : isLiked == false
-                                            ? CupertinoIcons.heart
-                                            : CupertinoIcons.heart,
-                                    size: 26.h(context),
-                                    color: Colors.white,
-                                  );
-                                },
-                                error: (error, stk) => Container(),
-                                loading: () =>
-                                    const CircularProgressIndicator(),
-                              );
-                      }),
+                      child: Consumer(
+                        builder: (context, ref, child) {
+                          final likeState = ref.watch(likeProvider);
+                          // the wallpaper from the wallpaperId
+                          final wallpaper = ref.watch(
+                              getOneWallpaperProvider(widget.wallpaperId));
+                          // final isLiked = likeState.result;
+                          // HANDLING LIKES: IF THE LIKE FUNCTION IS LOADING THEN INSTANTIATE THE LIKE
+                          return
+
+                              /// the like is loading and the result is unliked
+                              /// the heart will end up full so it can be liked
+                              likeState.isLoading &&
+                                      likeState.result == LikeResult.unliked
+                                  ? Icon(
+                                      CupertinoIcons.heart_fill,
+                                      size: 26.h(context),
+                                      color: Colors.white,
+                                    )
+                                  :
+
+                                  /// the like is loading and the result is unliked
+                                  /// the heart will end up full so it can be unliked
+                                  likeState.isLoading &&
+                                          likeState.result == LikeResult.liked
+                                      ? Icon(
+                                          CupertinoIcons.heart,
+                                          size: 26.h(context),
+                                          color: Colors.white,
+                                        )
+                                      :
+                                      // get the information from the wallpaper backend and use it to like the wallpaper
+                                      wallpaper.when(
+                                          data: (wallpaperInfo) {
+                                            final String? userId = FirebaseAuth
+                                                .instance.currentUser?.uid;
+                                            // the like is determined if the users name is contained in the likeBy list
+                                            final isLiked = wallpaperInfo
+                                                    .likedBy
+                                                    .contains(userId) ??
+                                                false;
+                                            return Icon(
+                                              isLiked == true
+                                                  ? CupertinoIcons.heart_fill
+                                                  : isLiked == false
+                                                      ? CupertinoIcons.heart
+                                                      : CupertinoIcons.heart,
+                                              size: 26.h(context),
+                                              color: Colors.white,
+                                            );
+                                          },
+                                          error: (error, stk) => Container(),
+                                          loading: () =>
+                                              const CircularProgressIndicator(),
+                                        );
+                        },
+                      ),
                     ),
                   ],
                 )
@@ -181,67 +205,70 @@ class _WallpaperPageState extends ConsumerState<WallpaperPage> {
             SizedBox(height: 14.h(context)),
 
             // SAVE AND SET BUTTON
-            Consumer(builder: (context, ref, child) {
-              final downloadState = ref.watch(downloadWallpaperStateProvider);
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // SAVE BUTTON
-                  InkWell(
-                    // download the wallpaper to the phone
-                    onTap: () async {
-                      await ref
-                          .read(downloadWallpaperStateProvider.notifier)
-                          .downloadWallpaper(
-                            wallpaperName: widget.wallpaperName,
-                            wallpaperUrl: widget.wallpaper,
-                          )
-                          .whenComplete(
-                        () {
-                          // display a snackbar for the different condidtions in for the download
-                          if (downloadState.result == DownloadResult.success &&
-                              !downloadState.isLoading) {
-                            appSnackBar(context, "Wallpapaer downloaded");
-                          } else {
-                            final errorInformation =
-                                DownloadWallpaperClient.error;
-                            appSnackBar(context, errorInformation);
-                          }
-                        },
-                      );
-                    },
-                    borderRadius: BorderRadius.circular(40.h(context)),
-                    child: ActionButton(
-                      isLoading: downloadState.isLoading,
-                      title: "Save",
-                      icon: ImageIcon(
-                        const AssetImage(AppImages.downloadIcon),
-                        size: 15.h(context),
-                        color: Colors.white,
+            Consumer(
+              builder: (context, ref, child) {
+                final downloadState = ref.watch(downloadWallpaperStateProvider);
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // SAVE BUTTON
+                    InkWell(
+                      // download the wallpaper to the phone
+                      onTap: () async {
+                        await ref
+                            .read(downloadWallpaperStateProvider.notifier)
+                            .downloadWallpaper(
+                              wallpaperName: widget.wallpaperName,
+                              wallpaperUrl: widget.wallpaper,
+                            )
+                            .whenComplete(
+                          () {
+                            // display a snackbar for the different condidtions in for the download
+                            if (downloadState.result ==
+                                    DownloadResult.success &&
+                                !downloadState.isLoading) {
+                              appSnackBar(context, "Wallpapaer downloaded");
+                            } else {
+                              final errorInformation =
+                                  DownloadWallpaperClient.error;
+                              appSnackBar(context, errorInformation);
+                            }
+                          },
+                        );
+                      },
+                      borderRadius: BorderRadius.circular(40.h(context)),
+                      child: ActionButton(
+                        isLoading: downloadState.isLoading,
+                        title: "Save",
+                        icon: ImageIcon(
+                          const AssetImage(AppImages.downloadIcon),
+                          size: 15.h(context),
+                          color: Colors.white,
+                        ),
+                        color: AppColors.loginColor,
                       ),
-                      color: AppColors.loginColor,
                     ),
-                  ),
-                  // SET THE WALLPAPER
-                  InkWell(
-                    onTap: () async {
-                      showDraggableScrollableWidget(context);
-                      // function to set your phone wallpaper to the current Image
-                    },
-                    borderRadius: BorderRadius.circular(40.h(context)),
-                    child: ActionButton(
-                      isLoading: false,
-                      title: "Set",
-                      icon: Icon(
-                        Icons.image_outlined,
-                        size: 18.h(context),
+                    // SET THE WALLPAPER
+                    InkWell(
+                      onTap: () async {
+                        showDraggableScrollableWidget(context);
+                        // function to set your phone wallpaper to the current Image
+                      },
+                      borderRadius: BorderRadius.circular(40.h(context)),
+                      child: ActionButton(
+                        isLoading: false,
+                        title: "Set",
+                        icon: Icon(
+                          Icons.image_outlined,
+                          size: 18.h(context),
+                        ),
+                        color: AppColors.loginColor,
                       ),
-                      color: AppColors.loginColor,
                     ),
-                  ),
-                ],
-              );
-            }),
+                  ],
+                );
+              },
+            ),
             SizedBox(height: 25.h(context)),
 
             // DESCRIPTION ON THE WALLPAPER
