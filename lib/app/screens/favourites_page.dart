@@ -75,6 +75,7 @@ class _FavouritesPageState extends State<FavouritesPage>
                                         wallpaperId: favourites.wallpaperId,
                                         wallpaper: favourites.imageUrl,
                                         wallpaperName: favourites.wallpaperName,
+                                        noOfDownloads: favourites.noDownloaded,
                                       ),
                                     ),
                                   );

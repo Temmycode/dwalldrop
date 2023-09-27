@@ -27,12 +27,14 @@ class WallpaperPage extends ConsumerStatefulWidget {
   final String wallpaperId;
   final String wallpaper;
   final String wallpaperName;
+  final int noOfDownloads;
   const WallpaperPage({
     super.key,
     required this.heroKey,
     required this.wallpaperId,
     required this.wallpaper,
     required this.wallpaperName,
+    required this.noOfDownloads,
   });
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _WallpaperPageState();
@@ -282,7 +284,7 @@ class _WallpaperPageState extends ConsumerState<WallpaperPage> {
             ),
             SizedBox(height: 18.h(context)),
             WallpaperInfoContainer(
-              noOfDownloads: 20,
+              noOfDownloads: widget.noOfDownloads,
               size: 10,
               dimensions: "1440 x 3100",
               color: AppColors.lightGrey,

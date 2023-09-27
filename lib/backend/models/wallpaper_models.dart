@@ -10,7 +10,7 @@ class Wallpaper {
   final String userAvatar;
   final int noDownloaded;
   final List likedBy;
-  final int? size;
+  final num? size;
 
   const Wallpaper({
     required this.wallpaperId,
@@ -44,7 +44,7 @@ class Wallpaper {
       likedBy: snap['likedBy'],
       noDownloaded: snap['noDownloaded'],
       userAvatar: snap['userAvatar'],
-      // size: snap['size'],
+      size: snap['size'],
     );
   }
 
@@ -56,7 +56,8 @@ class Wallpaper {
           imageUrl == other.imageUrl &&
           userAvatar == other.userAvatar &&
           size == other.size &&
-          noDownloaded == other.noDownloaded);
+          noDownloaded == other.noDownloaded &&
+          likedBy == other.likedBy);
 
   @override
   int get hashCode => Object.hashAll(
@@ -67,6 +68,8 @@ class Wallpaper {
           imageUrl,
           userAvatar,
           size,
+          noDownloaded,
+          likedBy,
         ],
       );
 
@@ -74,5 +77,5 @@ class Wallpaper {
   String toString() =>
       '''Wallpaper(wallpaperId: $wallpaperId, wallpaperName: $wallpaperName,
        creatorName: $creatorName, imageUrl: $imageUrl, likedBy: $likedBy,
-        noDownloaded: $noDownloaded, userAvatar: $userAvatar)''';
+        noDownloaded: $noDownloaded, userAvatar: $userAvatar, size: $size)''';
 }

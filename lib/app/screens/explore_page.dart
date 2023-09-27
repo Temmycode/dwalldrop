@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dwalldrop/app/extensions/dimensions.dart';
 import 'package:dwalldrop/app/providers/is_upload_hidden_provider.dart';
 import 'package:dwalldrop/app/screens/upload_wallpaper_page.dart';
@@ -126,6 +128,7 @@ class _ExplorePageState extends ConsumerState<ExplorePage>
                         final wallpapers = ref.watch(wallpaperProviders);
                         return wallpapers.when(
                           data: (wallpaperData) {
+                            log(wallpaperData.toString());
                             return MasonryGridView.count(
                               padding: EdgeInsets.symmetric(
                                 horizontal: 13.w(context),
@@ -158,6 +161,8 @@ class _ExplorePageState extends ConsumerState<ExplorePage>
                                             wallpaperId: wallpaper.wallpaperId,
                                             wallpaperName:
                                                 wallpaper.wallpaperName,
+                                            noOfDownloads:
+                                                wallpaper.noDownloaded,
                                           ),
                                         ),
                                       );
